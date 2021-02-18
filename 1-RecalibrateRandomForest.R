@@ -124,6 +124,21 @@ names(df_SOC_validation)[3:4] <- c("true_SOC", "predicted_SOC")
 # View results.
 View(df_SOC_validation)
 
+# Selecting the true and predicted SOC columns.
+df_percentage <- (na.omit(df_SOC_validation[3:4]))
+# Calculating a new column with the absolute difference values.
+df_percentage$difference <- (na.omit(abs(df_SOC_validation[3] - df_SOC_validation[4])))
+# Updating the names.
+names(df_percentage)[1:3] <- c("True_SOC", "RandomForest_SOC", "RandomForest_Error")
+
+# Viewing the final table.
+View(df_percentage)
+# Export the final table.
+write.csv(df_percentage, "comparison.csv")
+
+# Calculating the prediction accuraccy in a single percentage.
+prediction_accuracy <- sum(df_percentage[3]) / sum(df_percentage[1])*100
+
 # --------------------
 # 7. Improving results
 # --------------------
