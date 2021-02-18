@@ -1,3 +1,11 @@
+# Spatial and Temporal Analysis 2020 
+# Assignment 1:
+# Random forest modelling and predicting
+
+# Group 7
+# Belinda Kooman
+# 18-02-2021
+
 # ------------------
 # 1. Import packages
 # ------------------
