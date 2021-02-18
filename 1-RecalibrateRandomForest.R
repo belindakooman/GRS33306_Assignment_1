@@ -1,0 +1,42 @@
+# ------------------
+# 1. Import packages
+# ------------------
+
+if( !("raster" %in% installed.packages()[,1]) )
+  install.packages("raster")
+library("raster")
+if( !("rgdal" %in% installed.packages()[,1]) )
+  install.packages("rgdal")
+library("rgdal")
+if( !("mapview" %in% installed.packages()[,1]) )
+  install.packages("mapview")
+library("mapview")
+if( !("rpart" %in% installed.packages()[,1]) )
+  install.packages("rpart")
+library("rpart")
+if( !("randomForest" %in% installed.packages()[,1]) )
+  install.packages("randomForest")
+library("randomForest")
+if( !("quantregForest" %in% installed.packages()[,1]) )
+  install.packages("quantregForest")
+library("quantregForest")
+
+# ------------------
+# 2. Import rasters
+# ------------------
+
+# List all rasters in the spatial-covariates folder.
+list_of_rasters <- list.files(path="spatial-covariates", pattern="*.tif", full.names=TRUE)
+# Separately import aspect.
+rl_aspect <- raster(list_of_rasters[1])
+
+# Calculate sine and cosine versions of the aspect raster layer.
+rl_sin_asp <- sin(rl_aspect)
+rl_cos_asp <- cos(rl_aspect)
+
+# Combine all other layers into a multiraster stack.
+multiraster <- stack(c(list_of_rasters[2:14], rl_sin_asp, rl_cos_asp))
+# Update names of the sine and cosine layers.
+names(multiraster)[14:15] <- c("sin_asp", "cos_asp")
+# view the results.
+plot(multiraster)
