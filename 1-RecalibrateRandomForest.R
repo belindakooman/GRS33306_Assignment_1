@@ -1,11 +1,3 @@
-# Spatial and Temporal Analysis 2020 
-# Assignment 1:
-# Random forest modelling and predicting
-
-# Group 7
-# Belinda Kooman
-# 18-02-2021
-
 # ------------------
 # 1. Import packages
 # ------------------
@@ -100,10 +92,15 @@ View(df_SOC_regmat)
 # ----------------------------
 
 # Calculate a random forest model.
-rf_SOC <- randomForest(x=df_SOC_regmat[,c(1:2, 4:18)], y=df_SOC_regmat$SOC, importance = TRUE)
+rf_SOC <- randomForest(x=df_SOC_regmat[4:18], y=df_SOC_regmat$SOC, importance = TRUE)
 # View the contributions of each of the variables in the model.
 rf_SOC[["importance"]]
 # Print some basic information about the model.
 print(rf_SOC)
 
-# Create predictions using this model..
+# Create predictions using this model.. This may take up to half a minute.
+rf_predict <- predict(rs_covariates, model=rf_SOC, na.rm=TRUE)
+# Plot the prediction.
+plot(rf_predict)
+
+# It only has 33.16% variance explained.. not a very nice result.
