@@ -29,3 +29,7 @@ rl_netherlands_rp <- projectRaster(rl_netherlands, crs = CRS("+init=epsg:28992")
 rl_EU_rp_cr <- crop(x = rl_europe_rp,
 y = rl_netherlands_rp)
 plot(rl_EU_rp_cr)
+
+# The values from both (Europe and the Netherlands need to be the same?)
+# Suppose they mean the number of samples... Right?
+# Rasters are all the size of the Netherlands and Europe's map is now cropped to the Netherlands' size. Should run the random forest at this point
