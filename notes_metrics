@@ -1,0 +1,32 @@
+
+Units
+-----------------------------
+validation data: %		range: 0 - 42
+
+RF map: 	%		range: 0 - 32
+
+Dutch map:	kg/kg		range: 0 - 0.37 
+		%		range: 0 - 37
+
+EU map: 	decag/kg	range: 0 - 30
+		kg/kg		range: 0 - 0.3
+		%		range: 0 - 30
+
+World map:  	decig/kg	range: 0 - 3000   -> how to change into percentage (first go to kg/kg and than *100)
+		kg/kg		range: 0 - 0.3
+		%		range: 0 - 30 %
+
+
+Conversion to percentage
+Example of world map
+1  kg SOC / 1 kg soil 	-> 100 %
+0.3 kg SOC / 1 kg soil 	-> 30 %
+
+
+
+
+
+
+Discussion:
+
+World map: gradient is correct: Randstad and Friesland/Groningen is correct, however N-Limburg is wrong. And 
