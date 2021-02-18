@@ -47,11 +47,39 @@ rs_covariates$landuse <- reclassify(rs_covariates$landuse, rcl = matrix(c(12, NA
 # Read only the relevant attributes of the soil observations point data (X and Y coordinates plus true SOC contents).
 df_SOC <- read.csv(file = "SOC_top_soil.csv", header = TRUE)[,c("X", "Y", "SOC")]
 
-# ---------------------------
-# 3. Performing model fitting
-# ---------------------------
+# -----------------------------
+# 3. Setting calibration points
+# -----------------------------
 
 # Set a seed.
 set.seed(150)
-# Split the points into calibration and validation sets.
-vn_rownumbers_validation <- sample(1:nrow(df_SOC), size = 250)
+# Take random row numbers for 90% of all points to serve as the calibration data.
+vn_rownumbers_calibration <- sample(1:nrow(df_SOC), size = (nrow(df_SOC)*0.9))
+
+# Assign these rows to calibration data.
+df_SOC_val <- df_SOC[vn_rownumbers_calibration,]
+# Assign the remaining rows to validation data.
+df_SOC_cal <- df_SOC[-vn_rownumbers_calibration,]
+# Remove the rownumbers to clean up the environment.
+remove(vn_rownumbers_calibration)
+
+# Convert the calibration points to a SpatialPointsDataframe.
+spdf_observations <- df_SOC_cal
+coordinates(spdf_observations) <- ~ X + Y
+crs(spdf_observations) <- crs(rs_covariates)
+
+# -------------------------------------------
+# 4. Extracting data using calibration points
+# -------------------------------------------
+
+# Extract attributes from the rasterstack at calibration point locations.
+mn_covariates <- extract(x = rs_covariates, y = spdf_observations)
+# Add the real SOC values to the covariates into a single dataframe.
+df_SOC_regmat <- cbind(df_SOC_cal, mn_covariates)
+# Clean up.
+remove(mn_covariates)
+
+# Turn categorical attributes into factors to ensure the random forest can run with it.
+df_SOC_regmat$landuse <- as.factor(df_SOC_regmat$landuse)
+# Remove all rows that contain NA values to prevent incorrect results.
+df_SOC_regmat <- df_SOC_regmat[complete.cases(df_SOC_regmat),]
