@@ -83,3 +83,19 @@ remove(mn_covariates)
 df_SOC_regmat$landuse <- as.factor(df_SOC_regmat$landuse)
 # Remove all rows that contain NA values to prevent incorrect results.
 df_SOC_regmat <- df_SOC_regmat[complete.cases(df_SOC_regmat),]
+
+# View the final calibration dataframe.
+View(df_SOC_regmat)
+
+# ----------------------------
+# 5. Fit a random forest model
+# ----------------------------
+
+# Calculate a random forest model.
+rf_SOC <- randomForest(x=df_SOC_regmat[,c(1:2, 4:18)], y=df_SOC_regmat$SOC, importance = TRUE)
+# View the contributions of each of the variables in the model.
+rf_SOC[["importance"]]
+# Print some basic information about the model.
+print(rf_SOC)
+
+# Create predictions using this model..
