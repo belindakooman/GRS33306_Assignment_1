@@ -57,9 +57,9 @@ set.seed(150)
 vn_rownumbers_calibration <- sample(1:nrow(df_SOC), size = (nrow(df_SOC)*0.9))
 
 # Assign these rows to calibration data.
-df_SOC_val <- df_SOC[vn_rownumbers_calibration,]
+df_SOC_cal <- df_SOC[vn_rownumbers_calibration,]
 # Assign the remaining rows to validation data.
-df_SOC_cal <- df_SOC[-vn_rownumbers_calibration,]
+df_SOC_val <- df_SOC[-vn_rownumbers_calibration,]
 # Remove the rownumbers to clean up the environment.
 remove(vn_rownumbers_calibration)
 
@@ -101,11 +101,32 @@ rf_predict <- predict(rs_covariates, model=rf_SOC, na.rm=TRUE)
 # Plot the prediction.
 plot(rf_predict)
 
-# It only has 33.16% variance explained.. not a very nice result.
+# It only has 33.1% variance explained.. not a very nice result.
 
-# ---------------------
-# 6. Evaluating results
-# ---------------------
+# ------------------------------------
+# 6. Evaluating with validation points
+# ------------------------------------
+
+# Convert the validation points to a SpatialPointsDataframe.
+spdf_validation <- df_SOC_val
+coordinates(spdf_validation) <- ~ X + Y
+crs(spdf_validation) <- crs(rs_covariates)
+
+# Extract values from the predicted SOC raster at validation point locations.
+validation_covariates <- extract(x = rf_predict, y = spdf_validation)
+# Add the real SOC values to the predicted ones into a comparison dataframe.
+df_SOC_validation <- cbind(df_SOC_val, validation_covariates)
+# Clean up.
+remove(validation_covariates)
+
+# Update the names in the comparison dataframe.
+names(df_SOC_validation)[3:4] <- c("true_SOC", "predicted_SOC")
+# View results.
+View(df_SOC_validation)
+
+# --------------------
+# 7. Improving results
+# --------------------
 
 # View the RMSEcal as a function of the amount of trees.
 plot(sqrt(rf_SOC$mse),xlab = "trees", ylab = "RMSEcal")
@@ -128,15 +149,15 @@ corrplot(mn_correlations_covariates)
 rf_SOC[["importance"]]
 # ..And also in a visual plot.
 varImpPlot(rf_SOC)
-# It appears that cos_asp, landuse and ndvi_summer do not add a lot of information.
+# It appears that sin_asp does not add a lot of information.
 # Try to improve the model by removing these..
 
 # Calculate a new random forest model.
-rf_SOC_reduced <- randomForest(x=df_SOC_regmat[c(4:5, 7, 9:17)], y=df_SOC_regmat$SOC, importance = TRUE)
+rf_SOC_reduced <- randomForest(x=df_SOC_regmat[c(4:16, 18)], y=df_SOC_regmat$SOC, importance = TRUE)
 # Print the details of this new model.
 print(rf_SOC_reduced)
 
-# Percentage variance explained has actually improved to 37.69%!
+# Percentage variance explained has somewhat improved to 33.38%.
 
 # Attempt a new prediction.
 rf_predict_reduced <- predict(rs_covariates, model=rf_SOC, na.rm=TRUE)
