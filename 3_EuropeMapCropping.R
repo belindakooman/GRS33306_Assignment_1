@@ -21,15 +21,15 @@ rl_europe     <- raster("data/SOC_map_europe.tif")
 plot(rl_europe)
 rl_netherlands <- raster("data/SOC_map_NL.tif")
 
-# reprojecting both (just in case) to EPSG
+# projecting both (just in case) to EPSG
 rl_europe_rp <- projectRaster(rl_europe, crs = CRS("+init=epsg:28992"))
 rl_netherlands_rp <- projectRaster(rl_netherlands, crs = CRS("+init=epsg:28992"))
 
-# Crop europe raster with the Netherladns?
-rl_EU_rp_cr <- crop(x = rl_europe_rp,
-y = rl_netherlands_rp)
-plot(rl_EU_rp_cr)
+#Crop Europe raster with the boundaries of the Netherlands
+sp_df_NL <- getData(name = 'GADM', country = 'NLD', level = 0)
+rl_EU_rp_cr <- crop (rl_europe_rp, y = rl_netherlands_rp)
 
 # The values from both (Europe and the Netherlands need to be the same?)
 # Suppose they mean the number of samples... Right?
-# Rasters are all the size of the Netherlands and Europe's map is now cropped to the Netherlands' size. Should run the random forest at this point
+# Rasters are all the size of the Netherlands and Europe's map is now cropped 
+# The optimum size
