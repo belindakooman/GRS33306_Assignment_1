@@ -25,11 +25,9 @@ rl_netherlands <- raster("data/SOC_map_NL.tif")
 rl_europe_rp <- projectRaster(rl_europe, crs = CRS("+init=epsg:28992"))
 rl_netherlands_rp <- projectRaster(rl_netherlands, crs = CRS("+init=epsg:28992"))
 
-#Crop Europe raster with the boundaries of the Netherlands
-sp_df_NL <- getData(name = 'GADM', country = 'NLD', level = 0)
+# Crop Europe raster with the boundaries of the Netherlands
 rl_EU_rp_cr <- crop (rl_europe_rp, y = rl_netherlands_rp)
 
-# The values from both (Europe and the Netherlands need to be the same?)
-# Suppose they mean the number of samples... Right?
-# Rasters are all the size of the Netherlands and Europe's map is now cropped 
-# The optimum size
+# Export raster
+writeRaster(rl_EU_rp_cr, 'rl_europe.tif', overwrite = TRUE)
+writeRaster(rl_netherlands_rp, 'rl_NL.tif', overwrite = TRUE)
