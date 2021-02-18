@@ -17,9 +17,9 @@ library("rpart")
 if( !("randomForest" %in% installed.packages()[,1]) )
   install.packages("randomForest")
 library("randomForest")
-if( !("quantregForest" %in% installed.packages()[,1]) )
-  install.packages("quantregForest")
-library("quantregForest")
+if (!("corrplot" %in% installed.packages()[,1]))
+  install.packages("corrplot")
+library("corrplot")
 
 # ------------------
 # 2. Import rasters
@@ -93,8 +93,6 @@ View(df_SOC_regmat)
 
 # Calculate a random forest model.
 rf_SOC <- randomForest(x=df_SOC_regmat[4:18], y=df_SOC_regmat$SOC, importance = TRUE)
-# View the contributions of each of the variables in the model.
-rf_SOC[["importance"]]
 # Print some basic information about the model.
 print(rf_SOC)
 
@@ -104,3 +102,43 @@ rf_predict <- predict(rs_covariates, model=rf_SOC, na.rm=TRUE)
 plot(rf_predict)
 
 # It only has 33.16% variance explained.. not a very nice result.
+
+# ---------------------
+# 6. Evaluating results
+# ---------------------
+
+# View the RMSEcal as a function of the amount of trees.
+plot(sqrt(rf_SOC$mse),xlab = "trees", ylab = "RMSEcal")
+grid()
+# ..Alongside the R2cal as a function of the amount of trees.
+plot(rf_SOC$rsq, xlab = "trees", ylab = "R2cal")
+grid()
+# It seems that around after 125 trees, additional trees do not add much value anymore. 
+# However, they also don't decrease it, so there is no point in changing the number of trees.
+
+# Create a correlation matrix to inspect correlation between predictors.
+mn_correlations_covariates <- cor(df_SOC_regmat[-c(1:3, 6)])
+# Print the rounded correlation values.
+round(mn_correlations_covariates, digits = 2)
+# View the correlation plot.
+corrplot(mn_correlations_covariates)
+# There is not a lot of overlap, so it doens't look like any predictors can be removed...
+
+# View the contributions of each of the variables in the model.
+rf_SOC[["importance"]]
+# ..And also in a visual plot.
+varImpPlot(rf_SOC)
+# It appears that cos_asp, landuse and ndvi_summer do not add a lot of information.
+# Try to improve the model by removing these..
+
+# Calculate a new random forest model.
+rf_SOC_reduced <- randomForest(x=df_SOC_regmat[c(4:5, 7, 9:17)], y=df_SOC_regmat$SOC, importance = TRUE)
+# Print the details of this new model.
+print(rf_SOC_reduced)
+
+# Percentage variance explained has actually improved to 37.69%!
+
+# Attempt a new prediction.
+rf_predict_reduced <- predict(rs_covariates, model=rf_SOC, na.rm=TRUE)
+# Plot the prediction.
+plot(rf_predict_reduced)
