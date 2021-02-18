@@ -111,19 +111,20 @@ remove(rl_soc_0_5_nr1,
 
 #### Merge the depth layers and export ####
 # adds up the SOC data from every layer
-rl_SOC_total_weighted = ((rl_soc_0_5cm*5) + (rl_soc_5_15cm*10) + (rl_soc_15_30cm*15)/30)
+rl_SOC_total_weighted = (((rl_soc_0_5cm*5) + (rl_soc_5_15cm*10) + (rl_soc_15_30cm*15))/30)
 
 
+## Crop the raster layer to the NL boundaries
 # download the boundaries of NL
 sp_df_NL <- getData(name    = 'GADM', 
                           country = 'NLD', 
                           level   = 0)
 
 
-## Create a cropped raster layer based on the boundaries of the NL
+# Create a cropped raster layer based on the boundaries of the NL
 rl_SOC_total_weighted_crop <- crop(x = rl_SOC_total_weighted, y = sp_df_NL)
 
-# check differnces
+# check differneces of crop
 plot(rl_SOC_total_weighted)
 plot(rl_SOC_total_weighted_crop)
 
