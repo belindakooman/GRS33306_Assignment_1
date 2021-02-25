@@ -1,0 +1,35 @@
+### TOXIC PLUME ###
+
+# Import libraries
+library(sp)
+library(raster)
+library(rgeos)
+library(MASS)
+library(rpart)
+
+# Read bike collection data.
+plume <- read.csv("toxicplume.csv", header = TRUE)
+# Read edges data.
+edges <- read.csv("BikeWageningen/TP_BikeNetwork_edges.csv", header = TRUE)
+# Read nodes data.
+nodes <- read.csv("BikeWageningen/TP_BikeNetwork_nodes.csv", header = TRUE)
+
+# View the bike collection data.
+View(plume)
+# Assign coordinates
+coordinates(plume) <- ~lon + lat
+# Set coordinate system.
+WGS84 <- CRS("+init=epsg:4326")
+# Apply coordinate system.
+proj4string(plume) <- WGS84
+
+# Apply coordinate system to street data, too.
+coordinates(nodes) <- ~lon + lat
+proj4string(nodes) <- WGS84
+coordinates(edges) <- ~geometry
+proj4string(edges) <- WGS84
+
+# Plotting... does not work :(
+plot(nodes, col=grey(0:99/99), main="street nodes")
+plot(edges, col=grey(0:99/99), main="street edges")
+points(plume, pch=16, cex=0.5, col="blue")
