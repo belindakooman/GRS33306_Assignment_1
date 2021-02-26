@@ -2,7 +2,7 @@
 list_tif <- list.files(".", pattern='slice2021', full.names =TRUE)
 RS_true <- stack(rs_true)
 
-# calculate the snapshots per 10 minutes
+
 rl_1410 <- ((RS_true$slice2021_000 + RS_true$slice2021_001 + RS_true$slice2021_002
             + RS_true$slice2021_003 + RS_true$slice2021_004 + RS_true$slice2021_005
             + RS_true$slice2021_006 + RS_true$slice2021_007 + RS_true$slice2021_008
@@ -47,3 +47,22 @@ rl_1530 <- ((RS_true$slice2021_080 + RS_true$slice2021_081 + RS_true$slice2021_0
              + RS_true$slice2021_083 + RS_true$slice2021_084 + RS_true$slice2021_085
              + RS_true$slice2021_086 + RS_true$slice2021_087 + RS_true$slice2021_088
              + RS_true$slice2021_089)/10)
+
+# Create a reclassifying matrix
+# values between 0 - 100 -> 1
+# values above 100       -> 2
+reclass_matrix <- matrix(c(0, 100, 1,
+                           100.00000001, 10000, 2),
+                         ncol = 3,
+                         byrow = TRUE)
+
+# reclassify the raster using the reclass object - reclass_m
+rl_1410_clas <- reclassify(rl_1410, reclass_matrix)
+rl_1420_clas <- reclassify(rl_1420, reclass_matrix)
+rl_1430_clas <- reclassify(rl_1430, reclass_matrix)
+rl_1440_clas <- reclassify(rl_1440, reclass_matrix)
+rl_1450_clas <- reclassify(rl_1450, reclass_matrix)
+rl_1500_clas <- reclassify(rl_1500, reclass_matrix)
+rl_1510_clas <- reclassify(rl_1510, reclass_matrix)
+rl_1520_clas <- reclassify(rl_1520, reclass_matrix)
+rl_1530_clas <- reclassify(rl_1530, reclass_matrix)
