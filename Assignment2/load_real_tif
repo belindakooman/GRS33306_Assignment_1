@@ -1,0 +1,49 @@
+# create raster stack
+list_tif <- list.files(".", pattern='slice2021', full.names =TRUE)
+RS_true <- stack(rs_true)
+
+# calculate the snapshots per 10 minutes
+rl_1410 <- ((RS_true$slice2021_000 + RS_true$slice2021_001 + RS_true$slice2021_002
+            + RS_true$slice2021_003 + RS_true$slice2021_004 + RS_true$slice2021_005
+            + RS_true$slice2021_006 + RS_true$slice2021_007 + RS_true$slice2021_008
+            + RS_true$slice2021_009)/10)
+
+rl_1420 <- ((RS_true$slice2021_010 + RS_true$slice2021_011 + RS_true$slice2021_012
+             + RS_true$slice2021_013 + RS_true$slice2021_014 + RS_true$slice2021_015
+             + RS_true$slice2021_016 + RS_true$slice2021_017 + RS_true$slice2021_018
+             + RS_true$slice2021_019)/10)
+
+rl_1430 <- ((RS_true$slice2021_020 + RS_true$slice2021_021 + RS_true$slice2021_022
+            + RS_true$slice2021_023 + RS_true$slice2021_024 + RS_true$slice2021_025
+            + RS_true$slice2021_026 + RS_true$slice2021_027 + RS_true$slice2021_028
+            + RS_true$slice2021_029)/10)
+
+rl_1440 <- ((RS_true$slice2021_030 + RS_true$slice2021_031 + RS_true$slice2021_032
+             + RS_true$slice2021_033 + RS_true$slice2021_034 + RS_true$slice2021_035
+             + RS_true$slice2021_036 + RS_true$slice2021_037 + RS_true$slice2021_038
+             + RS_true$slice2021_039)/10)
+
+rl_1450 <- ((RS_true$slice2021_040 + RS_true$slice2021_041 + RS_true$slice2021_042
+             + RS_true$slice2021_043 + RS_true$slice2021_044 + RS_true$slice2021_045
+             + RS_true$slice2021_046 + RS_true$slice2021_047 + RS_true$slice2021_048
+             + RS_true$slice2021_049)/10)
+
+rl_1500 <- ((RS_true$slice2021_050 + RS_true$slice2021_051 + RS_true$slice2021_052
+             + RS_true$slice2021_053 + RS_true$slice2021_054 + RS_true$slice2021_055
+             + RS_true$slice2021_056 + RS_true$slice2021_057 + RS_true$slice2021_058
+             + RS_true$slice2021_059)/10)
+
+rl_1510 <- ((RS_true$slice2021_060 + RS_true$slice2021_061 + RS_true$slice2021_062
+             + RS_true$slice2021_063 + RS_true$slice2021_064 + RS_true$slice2021_065
+             + RS_true$slice2021_066 + RS_true$slice2021_067 + RS_true$slice2021_068
+             + RS_true$slice2021_069)/10)
+
+rl_1520 <- ((RS_true$slice2021_070 + RS_true$slice2021_071 + RS_true$slice2021_072
+             + RS_true$slice2021_073 + RS_true$slice2021_074 + RS_true$slice2021_075
+             + RS_true$slice2021_076 + RS_true$slice2021_077 + RS_true$slice2021_078
+             + RS_true$slice2021_079)/10)
+
+rl_1530 <- ((RS_true$slice2021_080 + RS_true$slice2021_081 + RS_true$slice2021_082
+             + RS_true$slice2021_083 + RS_true$slice2021_084 + RS_true$slice2021_085
+             + RS_true$slice2021_086 + RS_true$slice2021_087 + RS_true$slice2021_088
+             + RS_true$slice2021_089)/10)
